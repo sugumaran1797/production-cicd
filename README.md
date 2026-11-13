@@ -1,2 +1,2 @@
 # production-cicd
-flaskapp
+Architecture flow: GitHub Push $\rightarrow$ GitHub Actions (scp-action + ssh-action) $\rightarrow$ AWS EC2 (ap-south-1) $\rightarrow$ Docker (devops-app + prometheus on devops-net).Tech stack: Flask, Docker, Terraform, Ansible, GitHub Actions, Prometheus/Datadog.How to deploy from scratch: terraform apply $\rightarrow$ ansible-playbook setup-docker.yml $\rightarrow$ ansible-playbook deploy-stack.yml.
