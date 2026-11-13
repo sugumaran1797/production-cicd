@@ -23,7 +23,7 @@ def home():
     endpoint = '/'
     with REQUEST_DURATION_SECONDS.labels(endpoint=endpoint).time():
         hostname = socket.gethostname()
-        version = os.getenv("APP_VERSION", "v1.0.0")
+        version = os.getenv("APP_VERSION", "v1.0.1")
         HTTP_REQUESTS_TOTAL.labels(method='GET', endpoint=endpoint, http_status='200').inc()
         return jsonify({
             "status": "healthy",
