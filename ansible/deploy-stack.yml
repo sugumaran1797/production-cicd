@@ -1,0 +1,56 @@
+---
+- name: Deploy Flask App and Prometheus on EC2
+  hosts: webservers
+  become: true
+
+  tasks:
+    - name: Create application directory on EC2
+      file:
+        path: /opt/devops-app
+        state: directory
+        mode: '0755'
+
+    - name: Copy Flask application files to EC2
+      copy:
+        src: "{{ item }}"
+        dest: /opt/devops-app/
+      loop:
+        - ../app/app.py
+        - ../app/requirements.txt
+        - ../app/Dockerfile
+        - prometheus.yml
+
+    - name: Create Docker network for app and monitoring
+      command: docker network create devops-net
+      register: net_result
+      failed_when: net_result.rc != 0 and 'already exists' not in net_result.stderr
+
+    - name: Build Flask Docker image on EC2
+      command: docker build -t devops-app:prod /opt/devops-app
+
+    - name: Remove existing Flask container if running
+      command: docker rm -f devops-app
+      ignore_errors: true
+
+    - name: Run Flask application container
+      command: >
+        docker run -d
+        --name devops-app
+        --network devops-net
+        --restart unless-stopped
+        -p 5000:5000
+        devops-app:prod
+
+    - name: Remove existing Prometheus container if running
+      command: docker rm -f prometheus
+      ignore_errors: true
+
+    - name: Run Prometheus container
+      command: >
+        docker run -d
+        --name prometheus
+        --network devops-net
+        --restart unless-stopped
+        -p 9090:9090
+        -v /opt/devops-app/prometheus.yml:/etc/prometheus/prometheus.yml
+        prom/prometheus
