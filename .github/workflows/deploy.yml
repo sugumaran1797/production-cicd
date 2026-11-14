@@ -31,7 +31,8 @@ jobs:
           source: "app/*,ansible/prometheus.yml"
           target: "/opt/devops-app"
           strip_components: 1
-
+        overwrite: true
+        
       - name: Rebuild and restart Flask container on EC2
         uses: appleboy/ssh-action@v1.0.3
         with:
