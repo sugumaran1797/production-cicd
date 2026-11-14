@@ -11,6 +11,16 @@ jobs:
     steps:
       - name: Checkout repository code
         uses: actions/checkout@v4
+      
+      - name: Prepare target directory on EC2
+        uses: appleboy/ssh-action@v1.0.3
+        with:
+          host: ${{ secrets.EC2_HOST }}
+          username: ${{ secrets.EC2_USER }}
+          key: ${{ secrets.EC2_SSH_KEY }}
+          script: |
+            sudo mkdir -p /opt/devops-app
+            sudo chown -R $USER:$USER /opt/devops-app
 
       - name: Copy updated application files to EC2
         uses: appleboy/scp-action@v0.1.7
