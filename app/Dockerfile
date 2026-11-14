@@ -9,7 +9,7 @@ WORKDIR /app
 COPY requirements.txt .
 RUN pip install --no-cache-dir -r requirements.txt
 
-COPY app.py .
+COPY app.py index.html ./
 
 RUN useradd -u 1001 appuser && chown -R appuser:appuser /app
 USER appuser

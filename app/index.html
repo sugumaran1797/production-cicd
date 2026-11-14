@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>DevOps Environment Portal</title>
+  <style>
+    body { font-family: system-ui, sans-serif; background: #0f172a; color: #f8fafc; display: flex; justify-content: center; align-items: center; height: 100vh; margin: 0; }
+    .card { background: #1e293b; padding: 2rem; border-radius: 12px; width: 380px; box-shadow: 0 10px 25px rgba(0,0,0,0.4); }
+    select { width: 100%; padding: 0.6rem; margin: 1rem 0; border-radius: 6px; border: 1px solid #475569; background: #0f172a; color: #f8fafc; font-size: 1rem; }
+    .details { background: #0f172a; padding: 1rem; border-radius: 8px; border-left: 4px solid #38bdf8; line-height: 1.6; }
+    .badge { display: inline-block; padding: 2px 8px; border-radius: 4px; font-size: 0.8rem; background: #059669; color: white; }
+  </style>
+</head>
+<body>
+  <div class="card">
+    <h2>Service Environment Selector</h2>
+    <label for="envSelect">Choose Target Environment:</label>
+    <select id="envSelect" onchange="updateEnv()">
+      <option value="prod">Production (ap-south-1)</option>
+      <option value="staging">Staging (ap-south-1)</option>
+      <option value="dev">Development (Local WSL2)</option>
+    </select>
+    <div class="details" id="envDetails"></div>
+  </div>
+
+  <script>
+    const data = {
+      prod: { host: "ec2-prod.ap-south-1.compute.amazonaws.com", runtime: "Nginx Alpine Container", status: "Healthy" },
+      staging: { host: "ec2-stage.ap-south-1.compute.amazonaws.com", runtime: "Nginx Alpine Container", status: "Ready for QA" },
+      dev: { host: "localhost:8080", runtime: "WSL2 Docker Engine", status: "Active" }
+    };
+    function updateEnv() {
+      const val = document.getElementById("envSelect").value;
+      const info = data[val];
+      document.getElementById("envDetails").innerHTML = `
+        <strong>Host:</strong> ${info.host}<br/>
+        <strong>Runtime:</strong> ${info.runtime}<br/>
+        <strong>Status:</strong> <span class="badge">${info.status}</span>
+      `;
+    }
+    updateEnv();
+  </script>
+</body>
+</html>

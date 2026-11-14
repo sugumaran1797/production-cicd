@@ -16,6 +16,7 @@
         dest: /opt/devops-app/
       loop:
         - ../app/app.py
+        - ../app/index.html
         - ../app/requirements.txt
         - ../app/Dockerfile
         - prometheus.yml
